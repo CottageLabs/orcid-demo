@@ -1,0 +1,5 @@
+.idea/
+creds.json
+creds.txt
+*~
+*.pyc
