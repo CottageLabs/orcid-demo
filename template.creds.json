@@ -1,0 +1,10 @@
+{
+	"pub_client_id" : "",
+	"pub_client_secret" : "",
+	"pub_oauth" : "https://pub.orcid.org/oauth/token",
+
+	"sandbox_client_id" : "",
+	"sandbox_client_secret" : "",
+	"sandbox_oauth" : "https://pub.sandbox.orcid.org/oauth/token",
+	"sandbox_authorize" : "https://sandbox.orcid.org/oauth/authorize"
+}

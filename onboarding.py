@@ -1,18 +1,49 @@
+"""
+A script to expose some of the key operations required for the Onboarding use case
+
+You will need a file called creds.json in the root of this code library, which follows the
+structure defined by template.creds.json.  You get your client_id and client_secret from
+the ORCID site as per the instructions here:
+
+https://members.orcid.org/api/accessing-public-api
+
+You need to do the same for the sandbox_client_id and sandbox_client_secret from here:
+
+https://orcid.org/content/register-client-application-sandbox
+
+You will also need to have an account in the sandbox that you are happy to have this script mess
+with.  You can make one here:
+
+https://sandbox.orcid.org/signin
+
+"""
+
+# import our common orcid client.  It's basic, but will do the job for demonstration
 import orcid
+
 from datetime import datetime
 
-
+# Adding data to a user's ORCID record requires their express permission.  This operation gets us a URL
+# which will allow a user to give us that permission.  If you run this script and follow this URL, it will
+# give access to YOUR orcid to this script.  (Don't worry, it's only this instance of the script that gets access
+# and it's YOU that's running it with your creds.json file, no one else can access it).
 permission_url = orcid.get_permission_url(system="sandbox")
 
 print "Please visit the following URL in your browser and grant the application permissions"
 print permission_url
 print ""
 
+# The user will need to give us back the code from the google oauth playground
 code = raw_input("When you've done that, enter your authorisation code:")
 
+# exchange the short code for a full access token
 token_data = orcid.exchange_code_for_token(code, system="sandbox")
 print token_data
 
+# this is the bio XML that we're going to insert.  You can customise this to contain whatever you like.
+# XML is formatted as per:
+# https://members.orcid.org/api/xml-orcid-bio
+#
 bio_xml = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <orcid-message xmlns="http://www.orcid.org/ns/orcid"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -40,10 +71,15 @@ bio_xml = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 bio_xml = bio_xml.replace("[NOW]", str(datetime.utcnow()))
 print bio_xml
 
+# put the bio information into the record.  After the script has run, go take a look at your orcid record,
+# and you'll see the updated bio
 resp1 = orcid.put_bio(token_data, bio_xml, system="sandbox")
 print resp1
 
-
+# this is the work XML that we're going to add.  You can customise this to contain whatever you like.
+# XML is formatted as per:
+# https://members.orcid.org/api/xml-orcid-works
+#
 work_xml = '''<?xml version="1.0" encoding="UTF-8"?>
 <orcid-message xmlns="http://www.orcid.org/ns/orcid"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -93,5 +129,6 @@ work_xml = work_xml.replace("[NOW]", str(datetime.utcnow()))
 work_xml = work_xml.replace("[ORCID]", token_data["orcid"])
 print work_xml
 
+# add the work to the user's orcid record.  Go look at your record after running this script to see the extra work appear.
 resp2 = orcid.add_work(token_data, work_xml, system="sandbox")
 print resp2
