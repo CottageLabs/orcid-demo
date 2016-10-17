@@ -10,3 +10,6 @@ curl -H "Content-Type: application/orcid+xml" -H "Authorization: Bearer aa2c8730
 
 curl -H "Content-Type: application/orcid+xml" -H "Authorization: Bearer 27196816-2a3c-42fa-9b83-9bf9115cb8b7" "https://pub.orcid.org/v1.2/search/orcid-bio/?q=385488+AND+ORCID"
 
+# Exchange code for tokens
+
+curl -i -L -H "Accept: application/json" --data "client_id=APP-NPXKK6HFN6TJ4YYI&client_secret=060c36f2-cce2-4f74-bde0-a17d8bb30a97&grant_type=authorization_code&code=Mo0WOt&redirect_uri=https://developers.google.com/oauthplayground" "https://sandbox.orcid.org/oauth/token"
